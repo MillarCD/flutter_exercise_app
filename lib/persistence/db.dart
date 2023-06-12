@@ -1,3 +1,4 @@
+import 'package:eapp/models/exercise.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DB {
@@ -41,10 +42,21 @@ class DB {
               CREATE TABLE Training (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 start_datetime DATETIME,
-                end_datetime DATETIME,
+                end_datetime DATETIME
               )
           '''
         );
+
+        await db.rawInsert(
+          '''
+              INSERT INTO Exercise (name) VALUES
+              ("Curd de biceps"),
+              ("Press de banca"),
+              ("Press militar"),
+              ("Sentadillas")
+          '''
+        );
+
       }
     );
   }
@@ -54,6 +66,13 @@ class DB {
 
     await initDB();
     return _database!;
+  }
+
+  Future<List<Exercise>> getExercises() async {
+    final Database db = await database;
+    final res = await db.rawQuery('SELECT * FROM Exercise');
+
+    return [ ...res.map((e) => Exercise.fromMap(e))];
   }
 
   // TODO: registrar rutina;
