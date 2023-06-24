@@ -1,5 +1,8 @@
-import 'package:eapp/models/exercise.dart';
+import 'package:eapp/models/training.dart';
 import 'package:sqflite/sqflite.dart';
+
+import 'package:eapp/models/exercise.dart';
+import 'package:eapp/models/series.dart';
 
 class DB {
 
@@ -75,7 +78,42 @@ class DB {
     return [ ...res.map((e) => Exercise.fromMap(e))];
   }
 
-  // TODO: registrar rutina;
+  Future<int> createTraining(List<Series> series, DateTime start, DateTime end) async {
+    final Database db = await database;
 
+    final int idTraining = await db.transaction((txn) async {
+      final int idTraining = await txn.rawInsert(
+        """
+          INSERT INTO Training (start_datetime, end_datetime) VALUES
+          (?, ?)
+        """,
+        [start.toString(), end.toString()]
+      );
+
+      final batch = txn.batch();
+      for (Series s in series) {
+        batch.rawInsert(
+          """
+            INSERT INTO Series (id_training, id_exercise, weight, repetitions) VALUES
+            (?, ?, ?, ?)
+          """,
+          [idTraining, s.idExercise, s.weight, s.repetitions]
+        );
+      }
+      await batch.commit();
+      return idTraining;
+    });
+
+    print("Se registro la rutina: $idTraining");
+    return idTraining;
+  }
+
+  Future<List<Training>> getTrainings() async {
+    final Database db = await database;
+    List<Map<String, Object?>> res = await db.rawQuery("SELECT * FROM Training");
+    print("se obtuvieron los entrenamientos");
+    
+    return [ ...res.map((t) => Training.fromMap(t)) ];
+  }
   // TODO: obtener todas las rutinas
 }

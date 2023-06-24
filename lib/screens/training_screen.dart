@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:go_router/go_router.dart';
+
 import 'package:eapp/models/exercise.dart';
 import 'package:eapp/persistence/db.dart';
 import 'package:eapp/widgets/serie_form.dart';
+import 'package:eapp/controllers/training_controller.dart';
 
 class TrainingScreen extends StatelessWidget {
 
@@ -35,7 +38,12 @@ class TrainingScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DropdownMenu(
-                    dropdownMenuEntries: entries
+                    label: const Text("Exercise"),
+                    dropdownMenuEntries: entries,
+                    onSelected:(value) {
+                      TrainingController().currentExercise = value as Exercise;
+                      print("Se selecciono ${value.name}");
+                    },
                   ),
                   
                   const SizedBox( height: 30, ),
@@ -51,6 +59,8 @@ class TrainingScreen extends StatelessWidget {
                     child: FilledButton(
                       onPressed: () {
                         print('Terminar rutina');
+                        TrainingController().endTraining();
+                        GoRouter.of(context).go('/');
                       }, 
                       child: const Text('End Training', style: TextStyle(fontSize: 21, fontWeight: FontWeight.normal))
                     ),
