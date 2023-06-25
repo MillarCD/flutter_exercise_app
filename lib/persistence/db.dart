@@ -115,5 +115,13 @@ class DB {
     
     return [ ...res.map((t) => Training.fromMap(t)) ];
   }
-  // TODO: obtener todas las rutinas
+  
+  Future<List<Series>> getSeriesByIdTraining(int idTraining) async {
+    final Database db = await database;
+    List<Map<String, Object?>> res = await db.rawQuery("SELECT * FROM Series WHERE id_training=?", [idTraining]);
+    print("se obtuvieron las series");
+
+    return [ ...res.map((t) => Series.fromMap(t)) ];
+  }
+
 }

@@ -1,9 +1,11 @@
-import 'package:eapp/models/training.dart';
-import 'package:eapp/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import 'package:eapp/controllers/training_controller.dart';
+import 'package:eapp/controllers/selected_training_controller.dart';
+import 'package:eapp/models/training.dart';
+import 'package:eapp/utils.dart';
 import 'package:eapp/persistence/db.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -13,6 +15,14 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (context) => const [PopupMenuItem(child: Text("Exercises"))], // TODO: add entries
+          )
+        ],
+      ),
       body: FutureBuilder(
         future: DB().getTrainings(),
         builder: (context, snapshot) {
@@ -29,6 +39,10 @@ class HomeScreen extends StatelessWidget {
               return ListTile(
                 title: Text(getDate(training.start)),
                 subtitle: Text("Duration: ${hoursBetweenDates(training.start, training.end)}"),
+                onTap: () {
+                  Provider.of<SelectedTrainingController>(context, listen: false).training = training;
+                  GoRouter.of(context).push('/training_details');
+                },
               );
             },
           );
@@ -39,7 +53,7 @@ class HomeScreen extends StatelessWidget {
         onPressed: () {
           print('comenzar entrenamiento');
           TrainingController().startTraining();
-          GoRouter.of(context).go('/training');
+          GoRouter.of(context).push('/training');
         },
         icon: const Icon( Icons.sports_martial_arts_sharp ),
         label: const Text('Start Training')

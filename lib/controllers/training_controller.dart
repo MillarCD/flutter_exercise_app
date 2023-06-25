@@ -26,7 +26,7 @@ class TrainingController {
   }
 
   Future<bool> endTraining() async {
-    if (_start == null) return false;
+    if (_start == null || _series.isEmpty) return false;
     _end = DateTime.now();
     // TODO: guarda en la base de datos el entrenamiento
     await DB().createTraining(_series, _start!, _end!);

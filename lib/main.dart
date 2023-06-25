@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+import 'package:eapp/controllers/selected_training_controller.dart';
 import 'package:eapp/screens/screens.dart'
 ;
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider<SelectedTrainingController>(create: (context) => SelectedTrainingController(),)
+      ],
+      child: const MyApp()
+    )
+  );
 }
 
 final GoRouter _router = GoRouter(
@@ -16,6 +25,10 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: '/training',
           builder:(context, state) => const TrainingScreen(),
+        ),
+        GoRoute(
+          path: '/training_details',
+          builder:(context, state) => const TrainingDetailsScreen(),
         )
       ]
     );

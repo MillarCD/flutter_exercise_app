@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:eapp/controllers/training_controller.dart';
-import 'package:eapp/models/series.dart';
 
 class SerieForm extends StatelessWidget {
   const SerieForm({super.key});
@@ -47,9 +46,10 @@ class SerieForm extends StatelessWidget {
 
                   if (!res) return;
 
-                  FocusScope.of(context).unfocus();
+                  print("unfocus");
+                  // FocusScope.of(context).unfocus();
                   weightController.clear();
-                  repetitionsController.clear(); // = '';
+                  repetitionsController.clear();;
                 }
                 print('No se guardo');
               },
