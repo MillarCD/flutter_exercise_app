@@ -29,6 +29,10 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: '/training_details',
           builder:(context, state) => const TrainingDetailsScreen(),
+        ),
+        GoRoute(
+          path: '/exercises',
+          builder:(context, state) => const ExerciseScreen(),
         )
       ]
     );
@@ -44,6 +48,10 @@ class MyApp extends StatelessWidget {
       title: 'Register training app',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green[900]!),
+        useMaterial3: true,
+      ),
+      darkTheme: ThemeData.dark().copyWith(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green[900]!),
         useMaterial3: true,
       ),

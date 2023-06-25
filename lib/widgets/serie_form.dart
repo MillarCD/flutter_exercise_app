@@ -16,24 +16,24 @@ class SerieForm extends StatelessWidget {
       key: formKey,
       child: Row(
         children: [
-
+    
           Expanded(
             flex: 1,
             child: _CustomTextFormField(label: 'Weight', controller: weightController)
           ),
-
+    
           const SizedBox(
             width: 20,
             child: Center(child: Text('X')),
           ),
-
+    
           Expanded(
             flex: 1,
             child: _CustomTextFormField(label: 'Repetitions', controller: repetitionsController,),
           ),
-
-          const SizedBox(width: 20,),
-
+    
+          const SizedBox(width: 16,),
+    
           Expanded(
             flex: 1,
             child: FilledButton.tonal(
@@ -43,9 +43,9 @@ class SerieForm extends StatelessWidget {
                   final double weight = double.parse(weightController.text);
                   final int repetitions = int.parse(repetitionsController.text);
                   bool res = TrainingController().addSeries(weight, repetitions);
-
+    
                   if (!res) return;
-
+    
                   print("unfocus");
                   // FocusScope.of(context).unfocus();
                   weightController.clear();

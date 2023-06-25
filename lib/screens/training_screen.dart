@@ -15,6 +15,7 @@ class TrainingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.onBackground,
       body: FutureBuilder(
         future: DB().getExercises(),
 
@@ -49,12 +50,12 @@ class TrainingScreen extends StatelessWidget {
                   const SizedBox( height: 30, ),
                   
                   const SerieForm(),
-        
+                    
                   Expanded(
                     flex: 1,
                     child: Container()
                   ),
-        
+                    
                   Center(
                     child: FilledButton(
                       onPressed: () {
