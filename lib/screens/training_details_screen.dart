@@ -18,8 +18,6 @@ class TrainingDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        backgroundColor: Colors.transparent,
         title: Text(getDate(stController.training!.start)),
       ),
       body: ListView.separated(
@@ -73,7 +71,7 @@ class _CustomListViewState extends State<_CustomListView> {
         ) 
         :
         Card(
-          color: Theme.of(context).colorScheme.secondary,
+          // color: Theme.of(context).colorScheme.secondary,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(

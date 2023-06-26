@@ -1,12 +1,13 @@
-import 'package:eapp/controllers/exercises_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import 'package:eapp/controllers/exercises_controller.dart';
 import 'package:eapp/controllers/selected_training_controller.dart';
-import 'package:eapp/screens/screens.dart'
-;
+import 'package:eapp/screens/screens.dart';
+import 'package:eapp/themes/themes.dart';
+
 void main() {
   runApp(MultiProvider(
       providers: [
@@ -49,14 +50,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'Register training app',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green[900]!),
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData.dark().copyWith(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green[900]!),
-        useMaterial3: true,
-      ),
+      theme: LightTheme.theme,
+      darkTheme: DarkTheme.theme,
       routerConfig: _router,
     );
   }

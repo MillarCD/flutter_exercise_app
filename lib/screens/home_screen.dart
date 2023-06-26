@@ -16,9 +16,6 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
         actions: [
           PopupMenuButton(
             itemBuilder: (context) => [

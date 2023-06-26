@@ -17,7 +17,6 @@ class ExerciseScreen extends StatelessWidget {
     List<Exercise> exercises = exercisesController.exercises;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.secondary,
         title: const Text("Exercises"),
       ),
       body: (isLoading)
@@ -66,7 +65,8 @@ class ExerciseScreen extends StatelessWidget {
               onPressed: () async {
                 if (controller.text == '') return;
                 final bool res = await exercisesController.createExercise(controller.text);
-    
+                if (!res) return;
+                
                 if (context.mounted) GoRouter.of(context).pop();
               },
             ),

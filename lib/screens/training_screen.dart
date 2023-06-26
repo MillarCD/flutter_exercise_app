@@ -15,7 +15,7 @@ class TrainingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.onBackground,
+      appBar: AppBar(),
       body: FutureBuilder(
         future: DB().getExercises(),
 
@@ -58,10 +58,10 @@ class TrainingScreen extends StatelessWidget {
                     
                   Center(
                     child: FilledButton(
-                      onPressed: () {
+                      onPressed: () async {
                         print('Terminar rutina');
-                        TrainingController().endTraining();
-                        GoRouter.of(context).go('/');
+                        final bool res = await TrainingController().endTraining();
+                        if (res && context.mounted) GoRouter.of(context).pop('/');
                       }, 
                       child: const Text('End Training', style: TextStyle(fontSize: 21, fontWeight: FontWeight.normal))
                     ),
