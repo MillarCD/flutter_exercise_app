@@ -59,11 +59,14 @@ class HomeScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           print('comenzar entrenamiento');
-          TrainingController().startTraining();
+          if (!TrainingController().isStarted) TrainingController().startTraining();
+          
           GoRouter.of(context).push('/training');
         },
         icon: const Icon( Icons.sports_martial_arts_sharp ),
-        label: const Text('Start Training')
+        label: (TrainingController().isStarted)
+          ? const Text('Continue Training')
+          : const Text('Start Training')
       ),
     );
   }

@@ -5,8 +5,9 @@ import 'package:eapp/persistence/db.dart';
 
 class TrainingController {
 
-  List<Series> _series = [];
+  final List<Series> _series = [];
   Exercise? currentExercise;
+  bool _isStarted = false;
   DateTime? _start;
   DateTime? _end;
 
@@ -15,7 +16,12 @@ class TrainingController {
 
   factory TrainingController() => _instance;
 
-  void startTraining() => _start = DateTime.now();
+  void startTraining() {
+    _start = DateTime.now();
+    _isStarted = true;
+  } 
+
+  bool get isStarted => _isStarted;
 
   bool addSeries(double weight, int repetitions) {
     if (currentExercise == null) return false;
@@ -28,11 +34,11 @@ class TrainingController {
   Future<bool> endTraining() async {
     if (_start == null || _series.isEmpty) return false;
     _end = DateTime.now();
-    // TODO: guarda en la base de datos el entrenamiento
     await DB().createTraining(_series, _start!, _end!);
     _series.clear();
     _start = null;
     _end = null;
+    _isStarted = false;
     return true;
   }
 }
