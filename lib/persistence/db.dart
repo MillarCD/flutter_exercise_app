@@ -110,7 +110,7 @@ class DB {
 
   Future<List<Training>> getTrainings() async {
     final Database db = await database;
-    List<Map<String, Object?>> res = await db.rawQuery("SELECT * FROM Training");
+    final List<Map<String, Object?>> res = await db.rawQuery("SELECT * FROM Training");
     print("se obtuvieron los entrenamientos");
     
     return [ ...res.map((t) => Training.fromMap(t)) ];
@@ -118,10 +118,28 @@ class DB {
   
   Future<List<Series>> getSeriesByIdTraining(int idTraining) async {
     final Database db = await database;
-    List<Map<String, Object?>> res = await db.rawQuery("SELECT * FROM Series WHERE id_training=?", [idTraining]);
+    final List<Map<String, Object?>> res = await db.rawQuery("SELECT * FROM Series WHERE id_training=?", [idTraining]);
     print("se obtuvieron las series");
 
     return [ ...res.map((t) => Series.fromMap(t)) ];
   }
 
+  Future<bool> checkExerciseByName(String name) async {
+    final Database db = await database;
+    final List<Map<String, Object?>> res = await db.rawQuery("SELECT * FROM Exercise WHERE name=? LIMIT 1", [name]);
+    return res.isNotEmpty;
+  }
+
+  Future<Exercise?> createExercise(String exerciseName) async {
+    final Database db = await database;
+    final int id = await db.rawInsert("INSERT INTO Exercise(name) VALUES(?)", [exerciseName]);
+    if (id > 0) return Exercise(id: id, name: exerciseName);
+    return null;
+  }
+
+  Future<int> updateExercise(Exercise exercise) async {
+    final Database db = await database;
+    final int id = await db.rawUpdate("UPDATE Exercise SET name=? WHERE id=?", [exercise.name, exercise.id]);
+    return id;
+  }
 }

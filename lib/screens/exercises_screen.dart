@@ -1,6 +1,9 @@
-import 'package:eapp/models/exercise.dart';
-import 'package:eapp/persistence/db.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+
+import 'package:eapp/controllers/exercises_controller.dart';
+import 'package:eapp/models/exercise.dart';
 
 class ExerciseScreen extends StatelessWidget {
 
@@ -9,36 +12,106 @@ class ExerciseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-
+    final ExercisesController exercisesController = Provider.of<ExercisesController>(context);
+    bool isLoading = exercisesController.isLoading;
+    List<Exercise> exercises = exercisesController.exercises;
     return Scaffold(
-      body: FutureBuilder(
-        future: DB().getExercises(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
-          if (snapshot.hasError) return const Center(child: Text("Something went wrong"),);
-
-          List<Exercise> exercises = snapshot.data!;
-
-          return ListView.separated(
-            itemCount: exercises.length,
-            separatorBuilder: (context, index) => const Divider(),
-            itemBuilder: (context, index) {
-              final Exercise exercise = exercises[index];
-
-              return ListTile(
-                title: Text(exercise.name)
-              );
-            },
-          );
-        },
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        title: const Text("Exercises"),
       ),
+      body: (isLoading)
+        ? const Center(child: CircularProgressIndicator())
+        : ListView.separated(
+          itemCount: exercises.length,
+          separatorBuilder: (context, index) => const Divider(),
+          itemBuilder: (context, index) {
+            final Exercise exercise = exercises[index];
+
+            return ListTile(
+              title: Text(exercise.name),
+              onLongPress: () async {
+                TextEditingController controller = TextEditingController();
+                await showDialog(
+                  context: context,
+                  builder: (context) => _ExerciseDialog(
+                    controller: controller,
+                    title: "Edit Exercise",
+                    labelText: "New name",
+                    onPressed: () async {
+                      String newName = controller.text;
+                      print("newName: $newName");
+                      if (controller.text == '') return;
+                      final bool res = await exercisesController.updateExercise(Exercise(id: exercise.id, name: newName));
+                      
+                      if (res && context.mounted) GoRouter.of(context).pop();
+                    },
+                  ),
+                );
+              },
+            );
+          },
+        ),
 
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () {
-          // TODO: desplegar modal para añadir ejercicio
+        onPressed: () async {
+          TextEditingController controller = TextEditingController();
+          await showDialog(
+            context: context,
+            builder: (context) => _ExerciseDialog(
+              controller: controller,
+              title: "Create Exercise",
+              labelText: "Name",
+              onPressed: () async {
+                if (controller.text == '') return;
+                final bool res = await exercisesController.createExercise(controller.text);
+    
+                if (context.mounted) GoRouter.of(context).pop();
+              },
+            ),
+          );
         },
       ),
+    );
+  }
+}
+
+class _ExerciseDialog extends StatelessWidget {
+  const _ExerciseDialog({
+    super.key,
+    required this.controller,
+    this.onPressed,
+    required this.title,
+    required this.labelText,
+  });
+
+  final TextEditingController controller;
+  final void Function()? onPressed;
+  final String title;
+  final String labelText;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(title),
+      content: TextField(
+        controller: controller,
+          decoration: InputDecoration(
+            label: Text(labelText),
+            border: const OutlineInputBorder(),
+          ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => GoRouter.of(context).pop(),
+          child: const Text("Cancel")
+        ),
+        TextButton(
+          onPressed: onPressed,
+          child: const Text("Save")
+        )
+      ],
     );
   }
 }

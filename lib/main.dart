@@ -1,3 +1,4 @@
+import 'package:eapp/controllers/exercises_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
@@ -9,7 +10,8 @@ import 'package:eapp/screens/screens.dart'
 void main() {
   runApp(MultiProvider(
       providers: [
-        ChangeNotifierProvider<SelectedTrainingController>(create: (context) => SelectedTrainingController(),)
+        ChangeNotifierProvider<SelectedTrainingController>(create: (context) => SelectedTrainingController(),),
+        ChangeNotifierProvider<ExercisesController>(create: (context) => ExercisesController(), lazy: false),
       ],
       child: const MyApp()
     )
