@@ -8,3 +8,7 @@ String hoursBetweenDates(DateTime date1, DateTime date2) {
   int m = minutes%60;
   return "${minutes~/60}:${(m<10) ? '0$m' : m}";
 }
+
+double calcOneRM(double weight, int reps) {
+  return weight / (1.0278 - (0.0278 * reps));
+}

@@ -71,22 +71,67 @@ class _CustomListViewState extends State<_CustomListView> {
         ) 
         :
         Card(
-          // color: Theme.of(context).colorScheme.secondary,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ...widget.series.map((s) {
-                  return Text(
-                    "${s.weight.toString().padLeft(6)} kg x ${s.repetitions} rep",
-                    style: const TextStyle(fontSize: 15),
-                  );
-                })
+                const _CardRow(
+                  'Kg', 'Reps', '1RM',
+                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                ),
+
+                const SizedBox(height: 10,),
+
+                ...widget.series.map((s) => _CardRow(
+                  s.weight.toString(),
+                  s.repetitions.toString(), 
+                  calcOneRM(s.weight, s.repetitions).toStringAsFixed(1),
+                  style: const TextStyle(fontSize: 15),
+                )),
               ],
             ),
           )
         ),
     );
+  }
+}
+
+class _CardRow extends StatelessWidget {
+  const _CardRow(this.text1, this.text2, this.text3, {
+    super.key,
+    this.style
+  });
+
+  final String text1;
+  final String text2;
+  final String text3;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        _CardRowText(text: text1, style: style),
+        _CardRowText(text: text2, style: style),
+        _CardRowText(text: text3, style: style)
+      ],
+    );
+  }
+}
+
+class _CardRowText extends StatelessWidget {
+  const _CardRowText({
+    super.key,
+    required this.text,
+    required this.style,
+  });
+
+  final String text;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(child: Center(child: Text(text, style: style,)));
   }
 }
