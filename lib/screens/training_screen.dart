@@ -1,3 +1,5 @@
+import 'package:eapp/controllers/training_history_controller.dart';
+import 'package:eapp/models/training.dart';
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
@@ -6,6 +8,7 @@ import 'package:eapp/models/exercise.dart';
 import 'package:eapp/persistence/db.dart';
 import 'package:eapp/widgets/serie_form.dart';
 import 'package:eapp/controllers/training_controller.dart';
+import 'package:provider/provider.dart';
 
 class TrainingScreen extends StatelessWidget {
 
@@ -60,8 +63,12 @@ class TrainingScreen extends StatelessWidget {
                     child: FilledButton(
                       onPressed: () async {
                         print('Terminar rutina');
-                        final bool res = await TrainingController().endTraining();
-                        if (res && context.mounted) GoRouter.of(context).pop('/');
+                        final Training? newTraining = await TrainingController().endTraining();
+
+                        if (newTraining!=null && context.mounted) {
+                          Provider.of<TrainingHistoryController>(context, listen: false).addTraining(newTraining);
+                          GoRouter.of(context).pop('/');
+                        };
                       }, 
                       child: const Text('End Training', style: TextStyle(fontSize: 21, fontWeight: FontWeight.normal))
                     ),

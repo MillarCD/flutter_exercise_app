@@ -17,17 +17,7 @@ class ExercisesController extends ChangeNotifier {
     );
   }
 
-  List<Exercise> get exercises {
-    if (_exercises.isNotEmpty) return _exercises;
-    _isLoading = true;
-    DB().getExercises().then(
-      (value)  => _exercises.addAll(value)
-    );
-
-    _isLoading = false;
-    notifyListeners();
-    return _exercises;
-  }
+  List<Exercise> get exercises => _exercises;
 
   Future<bool> createExercise(String name) async {
     final isUsed = await DB().checkExerciseByName(name);
@@ -51,6 +41,15 @@ class ExercisesController extends ChangeNotifier {
 
     notifyListeners();
     return true;
+  }
+
+  Future<bool> deleteExercise(int exerciseId) async {
+    final bool res = await DB().deleteExerciseById(exerciseId);
+    if (!res) return res;
+
+    _exercises = [ ..._exercises.where((e) => e.id != exerciseId) ];
+    notifyListeners();
+    return res;
   }
 
 }

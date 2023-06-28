@@ -142,4 +142,26 @@ class DB {
     final int id = await db.rawUpdate("UPDATE Exercise SET name=? WHERE id=?", [exercise.name, exercise.id]);
     return id;
   }
+
+  Future<bool> deleteExerciseById(int exerciseId) async {
+    final Database db = await database; 
+    final res = await db.rawQuery("SELECT * FROM Series WHERE id_exercise=? LIMIT 1", [exerciseId]);
+    if (res.isNotEmpty) return false;
+    final int id = await db.rawDelete("DELETE FROM Exercise WHERE id=?", [exerciseId]);
+    return (id>0);
+  }
+
+  Future<bool> deleteTrainingById(int idTraining) async {
+    final Database db = await database;
+    print('borrando rutina');
+    final res = await db.transaction(
+      (txn) async {
+        await txn.rawDelete("DELETE FROM Series WHERE id_training=?", [idTraining]);
+        return await txn.rawDelete("DELETE FROM Training WHERE id=?", [idTraining]);
+      }
+    );
+
+    print('se ejecuto la transaccion');
+    return (res>0);
+  }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import 'package:eapp/controllers/training_history_controller.dart';
 import 'package:eapp/controllers/exercises_controller.dart';
 import 'package:eapp/controllers/selected_training_controller.dart';
 import 'package:eapp/screens/screens.dart';
@@ -13,6 +14,7 @@ void main() {
       providers: [
         ChangeNotifierProvider<SelectedTrainingController>(create: (context) => SelectedTrainingController(),),
         ChangeNotifierProvider<ExercisesController>(create: (context) => ExercisesController(), lazy: false),
+        ChangeNotifierProvider<TrainingHistoryController>(create: (context) => TrainingHistoryController(), lazy: false),
       ],
       child: const MyApp()
     )

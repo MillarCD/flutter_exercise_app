@@ -35,7 +35,19 @@ class ExerciseScreen extends StatelessWidget {
                   context: context,
                   builder: (context) => _ExerciseDialog(
                     controller: controller,
-                    title: "Edit Exercise",
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Edit Exercise'),
+                        IconButton(
+                          icon: const Icon(Icons.delete_outlined, size: 25,),
+                          onPressed: () async {
+                            final bool res = await exercisesController.deleteExercise(exercise.id);
+                            if (res && context.mounted) GoRouter.of(context).pop();
+                          },
+                        )
+                      ],
+                    ),
                     labelText: "New name",
                     onPressed: () async {
                       String newName = controller.text;
@@ -60,7 +72,7 @@ class ExerciseScreen extends StatelessWidget {
             context: context,
             builder: (context) => _ExerciseDialog(
               controller: controller,
-              title: "Create Exercise",
+              title: const Text("Create Exercise"),
               labelText: "Name",
               onPressed: () async {
                 if (controller.text == '') return;
@@ -82,19 +94,19 @@ class _ExerciseDialog extends StatelessWidget {
     super.key,
     required this.controller,
     this.onPressed,
-    required this.title,
+    this.title,
     required this.labelText,
   });
 
   final TextEditingController controller;
   final void Function()? onPressed;
-  final String title;
+  final Widget? title;
   final String labelText;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title),
+      title: title,
       content: TextField(
         controller: controller,
           decoration: InputDecoration(
