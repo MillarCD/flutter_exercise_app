@@ -87,7 +87,7 @@ class _DeleteTrainingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("DeleteTraining?"),
+      title: const Text("Delete Training?"),
       actions: [
         TextButton(
           onPressed: () => GoRouter.of(context).pop(),
