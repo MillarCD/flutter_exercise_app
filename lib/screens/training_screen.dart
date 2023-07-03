@@ -1,9 +1,9 @@
-import 'package:eapp/controllers/stopwatch_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
 
 import 'package:eapp/models/exercise.dart';
+import 'package:eapp/controllers/stopwatch_controller.dart';
 import 'package:eapp/persistence/db.dart';
 import 'package:eapp/widgets/serie_form.dart';
 import 'package:eapp/controllers/training_controller.dart';
@@ -45,7 +45,7 @@ class TrainingScreen extends StatelessWidget {
                   
                   const _Stopwatch(),
                   const Divider(),
-                  
+
                   const SizedBox(height: 10,),
 
                   DropdownMenu(
@@ -61,9 +61,18 @@ class TrainingScreen extends StatelessWidget {
                   
                   const SerieForm(),
                     
-                  Expanded(
+                  const Expanded(
                     flex: 1,
-                    child: Container()
+                    child: SizedBox(
+                      // child: ListView.builder(
+                      //   itemBuilder: (context, index) {
+                          
+                      //     return ListTile(
+
+                      //     );
+                      //   },
+                      // ),
+                    )
                   ),
                     
                   Center(

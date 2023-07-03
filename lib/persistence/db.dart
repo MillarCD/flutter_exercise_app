@@ -49,17 +49,6 @@ class DB {
               )
           '''
         );
-
-        await db.rawInsert(
-          '''
-              INSERT INTO Exercise (name) VALUES
-              ("Curd de biceps"),
-              ("Press de banca"),
-              ("Press militar"),
-              ("Sentadillas")
-          '''
-        );
-
       }
     );
   }
@@ -121,6 +110,7 @@ class DB {
     final List<Map<String, Object?>> res = await db.rawQuery("SELECT * FROM Series WHERE id_training=?", [idTraining]);
     print("se obtuvieron las series");
 
+    
     return [ ...res.map((t) => Series.fromMap(t)) ];
   }
 
