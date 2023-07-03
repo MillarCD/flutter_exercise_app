@@ -1,16 +1,22 @@
+import 'package:eapp/widgets/number_text_form_field.dart';
 import 'package:flutter/material.dart';
 
-import 'package:eapp/controllers/training_controller.dart';
-
 class SerieForm extends StatelessWidget {
-  const SerieForm({super.key});
+  const SerieForm({
+    super.key, 
+    required this.weightController, 
+    required this.repetitionsController, 
+    this.onsubmitted
+  });
+
+  final TextEditingController weightController;
+  final TextEditingController repetitionsController;
+  final void Function()? onsubmitted;
 
 
   @override
   Widget build(BuildContext context) {
     GlobalKey<FormState> formKey = GlobalKey<FormState>();
-    TextEditingController weightController = TextEditingController();
-    TextEditingController repetitionsController = TextEditingController();
 
     return Form(
       key: formKey,
@@ -19,7 +25,7 @@ class SerieForm extends StatelessWidget {
     
           Expanded(
             flex: 1,
-            child: _CustomTextFormField(label: 'Weight', controller: weightController)
+            child: NumberTextFormField(label: 'Weight', controller: weightController)
           ),
     
           const SizedBox(
@@ -29,7 +35,7 @@ class SerieForm extends StatelessWidget {
     
           Expanded(
             flex: 1,
-            child: _CustomTextFormField(label: 'Repetitions', controller: repetitionsController,),
+            child: NumberTextFormField(label: 'Repetitions', controller: repetitionsController,),
           ),
     
           const SizedBox(width: 16,),
@@ -38,53 +44,15 @@ class SerieForm extends StatelessWidget {
             flex: 1,
             child: FilledButton.tonal(
               onPressed: () {
-                print('guardar serie');
-                if (formKey.currentState?.validate() ?? false) {
-                  final double weight = double.parse(weightController.text);
-                  final int repetitions = int.parse(repetitionsController.text);
-                  bool res = TrainingController().addSeries(weight, repetitions);
-    
-                  if (!res) return;
-    
-                  print("unfocus");
-                  // FocusScope.of(context).unfocus();
-                  weightController.clear();
-                  repetitionsController.clear();;
+                if (formKey.currentState?.validate() ?? false) {                 
+                  if (onsubmitted != null) onsubmitted!();
                 }
-                print('No se guardo');
               },
               child: const Text('Register')
             ),
           )
         ],
       ),
-    );
-  }
-}
-
-class _CustomTextFormField extends StatelessWidget {
-  const _CustomTextFormField({
-    super.key,
-    required this.label,
-    required this.controller,
-  });
-
-  final String label;
-  final TextEditingController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder()
-      ),
-      keyboardType: TextInputType.number,
-      validator: (value) {
-        if (double.tryParse(value ?? '') != null) return null;
-        return "";
-      },
     );
   }
 }

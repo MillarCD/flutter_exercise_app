@@ -1,6 +1,6 @@
 class Series {
-  final double weight;
-  final int repetitions;
+  double weight;
+  int repetitions;
   final int idExercise;
 
   Series({

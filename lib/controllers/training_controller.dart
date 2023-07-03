@@ -3,19 +3,15 @@ import 'package:eapp/models/exercise.dart';
 import 'package:eapp/models/series.dart';
 import 'package:eapp/models/training.dart';
 import 'package:eapp/persistence/db.dart';
+import 'package:flutter/foundation.dart';
 
-class TrainingController {
+class TrainingController extends ChangeNotifier{
 
   final List<Series> _series = [];
   Exercise? currentExercise;
   bool _isStarted = false;
   DateTime? _start;
   DateTime? _end;
-
-  static final TrainingController _instance = TrainingController._();
-  TrainingController._();
-
-  factory TrainingController() => _instance;
 
   void startTraining() {
     _start = DateTime.now();
@@ -24,12 +20,26 @@ class TrainingController {
 
   bool get isStarted => _isStarted;
 
+  List<Series> get series => _series;
+
   bool addSeries(double weight, int repetitions) {
     if (currentExercise == null) return false;
     _series.add(
       Series(idExercise: currentExercise!.id, weight: weight, repetitions: repetitions)
     );
+    notifyListeners();
     return true;
+  }
+
+  void updateSeries(Series s, double weight, int reps) {
+    s.weight = weight;
+    s.repetitions = reps;
+    notifyListeners();
+  }
+
+  void deleteSeriesByHashcode(int hc) {
+    _series.removeWhere((s) => s.hashCode == hc);
+    notifyListeners();
   }
 
   Future<Training?> endTraining() async {

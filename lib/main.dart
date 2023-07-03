@@ -1,4 +1,5 @@
 import 'package:eapp/controllers/stopwatch_controller.dart';
+import 'package:eapp/controllers/training_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
@@ -17,6 +18,7 @@ void main() {
         ChangeNotifierProvider<ExercisesController>(create: (context) => ExercisesController(), lazy: false),
         ChangeNotifierProvider<TrainingHistoryController>(create: (context) => TrainingHistoryController(), lazy: false),
         ChangeNotifierProvider<StopwatchController>( create: (context) => StopwatchController()),
+        ChangeNotifierProvider<TrainingController>( create: (context) => TrainingController()),
       ],
       child: const MyApp()
     )

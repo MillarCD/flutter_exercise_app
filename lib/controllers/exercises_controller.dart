@@ -19,6 +19,10 @@ class ExercisesController extends ChangeNotifier {
 
   List<Exercise> get exercises => _exercises;
 
+  Exercise getExerciseById(int id) {
+    return _exercises.firstWhere((e) => e.id == id);
+  }
+
   Future<bool> createExercise(String name) async {
     final isUsed = await DB().checkExerciseByName(name);
     if (isUsed) return false;
