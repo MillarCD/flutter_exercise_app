@@ -1,9 +1,9 @@
+import 'package:flutter/foundation.dart';
 
 import 'package:eapp/models/exercise.dart';
 import 'package:eapp/models/series.dart';
 import 'package:eapp/models/training.dart';
 import 'package:eapp/persistence/db.dart';
-import 'package:flutter/foundation.dart';
 
 class TrainingController extends ChangeNotifier{
 
@@ -53,4 +53,14 @@ class TrainingController extends ChangeNotifier{
     _isStarted = false;
     return newTraining;
   }
+
+  void discartTraining() {
+    if (_start == null && _series.isEmpty) return;
+
+    _series.clear();
+    _start = null;
+    _end = null;
+    _isStarted = false;
+  }
+  
 }

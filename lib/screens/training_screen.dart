@@ -1,17 +1,18 @@
-import 'package:eapp/controllers/exercises_controller.dart';
-import 'package:eapp/models/series.dart';
-import 'package:eapp/widgets/number_text_form_field.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
 
+import 'package:eapp/models/series.dart';
+import 'package:eapp/controllers/exercises_controller.dart';
 import 'package:eapp/models/exercise.dart';
 import 'package:eapp/controllers/stopwatch_controller.dart';
-import 'package:eapp/widgets/serie_form.dart';
 import 'package:eapp/controllers/training_controller.dart';
-import 'package:provider/provider.dart';
 import 'package:eapp/controllers/training_history_controller.dart';
 import 'package:eapp/models/training.dart';
+import 'package:eapp/widgets/serie_form.dart';
+import 'package:eapp/widgets/discart_training_dialog.dart';
+import 'package:eapp/widgets/number_text_form_field.dart';
 
 class TrainingScreen extends StatelessWidget {
 
@@ -34,7 +35,24 @@ class TrainingScreen extends StatelessWidget {
     final TextEditingController repetitionsController = TextEditingController();
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: const Icon( Icons.delete_outline ),
+            onPressed: () async {
+              final bool discart = await showDialog(
+                context: context,
+                builder: (context) => const DiscartTrainingDialog()
+              ) as bool? ?? false;
+
+              if (discart && context.mounted) {
+                trainController.discartTraining();
+                GoRouter.of(context).pop();
+              }
+            },
+          )
+        ],
+      ),
       body: SafeArea(
         child: Padding(
           padding:  const EdgeInsets.all(10.0),
