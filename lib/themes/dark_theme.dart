@@ -11,6 +11,7 @@ class DarkTheme {
     appBarTheme: AppBarTheme(
       foregroundColor: _colorScheme.onBackground,
       backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
       elevation: 0,
     )
   );

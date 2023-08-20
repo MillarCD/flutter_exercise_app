@@ -33,7 +33,7 @@ class TrainingHistoryController extends ChangeNotifier {
   }
 
   void addTraining(Training newTraining) {
-    _trainings.add(newTraining);
+    _trainings = [ newTraining, ..._trainings ];
     notifyListeners();
   }
 }

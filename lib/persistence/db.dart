@@ -99,7 +99,9 @@ class DB {
 
   Future<List<Training>> getTrainings() async {
     final Database db = await database;
-    final List<Map<String, Object?>> res = await db.rawQuery("SELECT * FROM Training");
+    final List<Map<String, Object?>> res = await db.rawQuery("""
+      SELECT * FROM Training ORDER BY start_datetime DESC
+    """);
     print("se obtuvieron los entrenamientos");
     
     return [ ...res.map((t) => Training.fromMap(t)) ];

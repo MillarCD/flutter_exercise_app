@@ -18,6 +18,8 @@ class HomeScreen extends StatelessWidget {
     TrainingHistoryController trainingHistController = Provider.of<TrainingHistoryController>(context);
     List<Training> trainings = trainingHistController.trainings;
 
+    int nextMonth = DateTime.now().month;
+
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -37,25 +39,42 @@ class HomeScreen extends StatelessWidget {
         itemCount: trainings.length,
         itemBuilder: (context, index) {
           final Training training = trainings[index];
-          
-          return ListTile(
-            title: Text(getDate(training.start)),
-            subtitle: Text("Duration: ${hoursBetweenDates(training.start, training.end)}"),
-            onTap: () {
-              Provider.of<SelectedTrainingController>(context, listen: false).training = training;
-              GoRouter.of(context).push('/training_details');
-            },
-            onLongPress: () async {
-              await showDialog(
-                context: context,
-                builder: (context) => _DeleteTrainingDialog(
-                  onPressed: () async {
-                    final bool res = await trainingHistController.deleteTrainingById(training.id);
-                    if (res && context.mounted) GoRouter.of(context).pop();
-                  },
-                )
-              );
-            },
+
+          if (nextMonth != training.start.month) {
+            return _TrainingRegisteredTile(
+              training: training, 
+              trainingHistController: trainingHistController
+            );
+          }
+
+          final String month = number2Month(nextMonth);
+          nextMonth = (1 < nextMonth) ? nextMonth - 1 : 12;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 15.0, 
+                  top: 7,
+                  bottom: 3,
+                ),
+                child: Text(
+                  "$month ${training.start.year}",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.secondary
+                  ),
+                ),
+              ),
+
+              _TrainingRegisteredTile(
+                training: training, 
+                trainingHistController: trainingHistController
+              ),
+            ],
           );
         },
       ),
@@ -73,6 +92,44 @@ class HomeScreen extends StatelessWidget {
           ? const Text('Continue Training')
           : const Text('Start Training')
       ),
+    );
+  }
+}
+
+class _TrainingRegisteredTile extends StatelessWidget {
+  const _TrainingRegisteredTile({
+    super.key,
+    required this.training,
+    required this.trainingHistController,
+  });
+
+  final Training training;
+  final TrainingHistoryController trainingHistController;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final String day = number2Day(training.start.weekday);
+    final String hour = numbers2Hour(training.start.hour, training.start.minute);
+
+    return ListTile(
+      title: Text("$day ${training.start.day} $hour"),
+      subtitle: Text("Duration: ${hoursBetweenDates(training.start, training.end)}"),
+      onTap: () {
+        Provider.of<SelectedTrainingController>(context, listen: false).training = training;
+        GoRouter.of(context).push('/training_details');
+      },
+      onLongPress: () async {
+        await showDialog(
+          context: context,
+          builder: (context) => _DeleteTrainingDialog(
+            onPressed: () async {
+              final bool res = await trainingHistController.deleteTrainingById(training.id);
+              if (res && context.mounted) GoRouter.of(context).pop();
+            },
+          )
+        );
+      },
     );
   }
 }
